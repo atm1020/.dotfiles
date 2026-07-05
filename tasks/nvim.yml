@@ -1,0 +1,16 @@
+- name: Install nvim
+  command: "{{ item }}"
+  loop:
+    - curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
+    - tar xzvf nvim-linux64.tar.gz
+    - chmod u+x ./nvim-linux64/bin/nvim
+    - mv nvim-linux64 /usr/local/share/nvim
+    - rm nvim-linux64.tar.gz
+
+- name: Set nvim alias in bashrc
+  lineinfile:
+    path: "/home/{{ user }}/.bashrc"
+    insertafter: BOF
+    line: "{{ item }}"
+  loop:
+    - export PATH="/usr/local/share/nvim/bin:$PATH"

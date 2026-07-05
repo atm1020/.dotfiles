@@ -1,0 +1,26 @@
+
+- name:  Install required apt packages
+  apt:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - git
+    - wget
+    - htop
+    - tmux
+    - cmake
+    - zsh
+    - default-jdk
+    - zip
+    - unzip
+    - apt-transport-https
+    - vim
+    - cargo
+    - openjdk-8-jdk
+    - fzf
+    - ripgrep
+    - ntp
+    - xclip
+    - maim
+    - luarocks
+  tags: packages

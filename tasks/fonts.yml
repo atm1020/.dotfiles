@@ -1,0 +1,18 @@
+- name: Check fonts directory is exists
+  stat:
+    path: "{{ user_home_path }}/.local/share/fonts"
+  register: fonts_stat
+  tags: &tag_for_fonts_tasks 'fonts'
+
+- name: Create fonts directory
+  file:
+    owner: '{{ user }}'
+    group: '{{ user }}'
+    path: '{{ user_home_path }}/.local/share/fonts'
+    state: directory
+  when: fonts_stat.stat.exists == False
+  tags: *tag_for_fonts_tasks 
+
+- name: Fonts
+  shell: 'cd {{ user_home_path }}/.local/share/fonts && curl -fLO https://github.com/ryanoasis/nerd-fonts/raw/HEAD/patched-fonts/DroidSansMono/DroidSansMNerdFont-Regular.otf'
+  tags: *tag_for_fonts_tasks

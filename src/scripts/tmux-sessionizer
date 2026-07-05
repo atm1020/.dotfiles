@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+#
+# # source: https://github.com/ThePrimeagen/.dotfiles/blob/master/bin/.local/scripts/tmux-sessionizer
+# if [[ $# -eq 1 ]]; then
+#     selected=$1
+# else
+#     selected=$(find ~/Projects ~/workspace -mindepth 1 -maxdepth 1 -type d | fzf)
+# fi
+#
+# if [[ -z $selected ]]; then
+#     exit 0
+# fi
+#
+# selected_name=$(basename "$selected" | tr . _)
+# echo $selected_name
+# tmux_running=$(pgrep tmux)
+#
+# if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
+#     tmux new-session -s $selected_name -c $selected
+#     exit 0
+# fi
+#
+# if ! tmux has-session -t=$selected_name 2> /dev/null; then
+#     tmux new-session -ds $selected_name -c $selected
+# fi
+#
+# tmux switch-client -t $selected_name
+
+file_name="$HOME/.tmux_sessions"
+idx=0
+data=()
+
+read_array() {
+	if [ ! -f $file_name ]; then
+		touch $file_name
+	else
+		idx=$(sed -n '1p' $file_name)
+		data=($(sed -n '2p' $file_name))
+	fi
+}
+
+write_data() {
+	echo -e "${idx}\n${data[@]}" > $file_name
+}
+
+add_element() {
+	data+=($1)
+}
+
+read_array
+
+
+if [ "$1" == "back" ]; then
+	# if [ $idx -ne ${#data[@]} ]; then
+	idx=$((idx + 1))
+	# fi
+	selected_name=${data[$idx]}
+elif  [ "$1" == "forward" ]; then
+	# if [ $idx -ne 0 ]; then
+	idx=$((idx - 1))
+	# fi	
+	selected_name=${data[$idx]}
+else
+	# source: https://github.com/ThePrimeagen/.dotfiles/blob/master/bin/.local/scripts/tmux-sessionizer
+	if [[ $# -eq 1 ]]; then
+	    selected=$1
+	else
+		selected=$({
+			printf "%s\n" "$HOME/.config" "$HOME/.dotfiles"
+			find "$HOME/.claude" "$HOME/workspace" "$HOME/.config" "$HOME/Documents/obsidian" -mindepth 1 -maxdepth 1 -type d 2>/dev/null
+		} | fzf)
+	fi
+	
+	if [[ -z $selected ]]; then
+	    exit 0
+	fi
+	
+	selected_name=$(basename "$selected" | tr . _)
+	add_element $selected_name
+fi
+
+echo $selected_name
+tmux_running=$(pgrep tmux)
+
+if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
+    tmux new-session -s $selected_name -c $selected
+    exit 0
+fi
+
+if ! tmux has-session -t=$selected_name 2> /dev/null; then
+    tmux new-session -ds $selected_name -c $selected
+fi
+
+tmux switch-client -t $selected_name
+
+write_data

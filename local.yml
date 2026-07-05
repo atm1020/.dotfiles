@@ -1,0 +1,90 @@
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  become: true
+
+  vars_prompt:
+    - name: user
+      prompt: What is your username?
+      private: false
+
+  vars:
+    #paths
+    user_home_path: '/home/{{ user }}'
+    nvm_home_path: '{{ user_home_path }}/.nvm'
+    sdk_home_path: '{{ user_home_path }}/.sdkman'
+    project_src_path: "{{ user_home_path }}/.dotfiles/src"
+    config_path: "{{ user_home_path }}/.config"
+    zshrc_config_path: '{{ project_src_path }}/zsh/zshrc'
+    zshrc_local_config_path: '{{ user_home_path }}/.zshrc_local'
+    java_debug_path: '{{ user_home_path }}/.config/java-debug'
+
+    # dotfiles path
+    dotfiles_local_path: "{{ user_home_path }}/.dotfiles/src"
+    dotfiles_dest_path: "{{ user_home_path }}/.config"
+
+    # versions
+    maven_version: 3.9.4
+    java_version: "17.0.7-oracle"
+    node_version: "20.10.0"
+    docker_buildx_version: "0.7.1"
+    go_version: "1.21.4"
+    lazygit_version: "0.42.0"
+    k9s_version: 0.32.4
+
+    # script names
+    tmux_sessionizer: "tmux-sessionizer"
+    ansible_playbook_run: "ansible-playbook-run"
+
+  tasks:
+   - include_tasks: tasks/apt.yml # Install required system packages
+     tags: &tag_for_apt_tasks "packages"
+
+   - include_tasks: tasks/snap.yml # Install snap packages
+     tags: [*tag_for_apt_tasks , "snap" ]
+     
+   - include_tasks: tasks/zsh.yml # Install zsh
+     tags: 'zsh'
+
+   - include_tasks: tasks/nvm.yml # Install nvm, node
+     tags: ['nvm', 'node']
+
+   - include_tasks: tasks/sdkman.yml # Install sdkman, java, maven task task task task 
+     tags: ['sdkman', 'java', 'maven' ]
+
+   - include_tasks: tasks/python.yml # Install python and pip packages
+     tags: ['python', *tag_for_apt_tasks , "pip"]
+
+   - include_tasks: tasks/i3.yml # install i3
+     tags: 'i3'
+
+   - include_tasks: tasks/go.yml # install go
+     tags: 'go'
+
+   - include_tasks: tasks/lua.yml # install lua stuff
+     tags: 'lua'
+
+   - include_tasks: tasks/k9s.yml
+     tags: 'k9s'
+
+   - include_tasks: tasks/docker.yml # install docker, docker compose, docker buildx
+     tags: [ 'docker', *tag_for_apt_tasks ]
+
+   - include_tasks: tasks/lazygit.yml # install lazygit
+     tags: lazygit
+
+   - include_tasks: tasks/nvim.yml # install nvim
+     tags: &tag_for_nvim_tasks "nvim"
+      
+   - include_tasks: tasks/fonts.yml # install fonts
+     tags: "fonts"
+      
+   - include_tasks: tasks/dotfiles.yml # set up dotfiles and config for: zshrc, tmux, .ideavimrc, i3, go
+     tags: 'dotfiles'
+
+   - include_tasks: tasks/scripts.yml # set up scripts
+     tags: 'scripts'
+
+  handlers:
+    - name: Reload environment
+      command: source /etc/environment

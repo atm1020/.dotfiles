@@ -1,0 +1,12 @@
+- name: Install lua & luarocks
+  apt:
+    name: "{{ item }}"
+    state: latest
+  loop:
+    - lua5.3
+    - lua-check
+  tags: &lua lua
+
+- name: Install stylua
+  shell: 'cargo install stylua'
+  tags: *lua

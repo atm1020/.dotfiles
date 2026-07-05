@@ -1,0 +1,18 @@
+*.log
+*.tar.gz
+.idea
+
+# Local/private files
+.zshrc_local
+.env
+.env.*
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+old_tmux.conf
+tmp.sql
+
+# OS/editor noise
+.DS_Store
+*.swp

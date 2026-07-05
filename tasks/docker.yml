@@ -1,0 +1,27 @@
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+  tags: &tags_for_docker_taks "docker"
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu focal stable
+    state: present
+  tags: *tags_for_docker_taks
+
+- name: Update apt and install docker-ce, docker-compose-plugin
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: true
+  loop:
+    - docker-ce
+    - docker-compose-plugin
+    -  docker-ce-cli
+    - docker-buildx-plugin
+  tags: [ *tags_for_docker_taks, "packages"]
+
+    #- name: "Install  Docker Buildx v{{ docker_buildx_version }}"
+    #  shell: wget -O /usr/local/bin/docker-buildx https://github.com/docker/buildx/releases/download/v{{ docker_buildx_version }}/buildx-v{{ docker_buildx_version }}.linux-amd64 && chmod +x /usr/local/bin/docker-buildx
+    #  tags: *tags_for_docker_taks

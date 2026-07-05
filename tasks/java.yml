@@ -1,0 +1,15 @@
+- name: "Check java-debug folder is exists"
+  stat:
+    path: "{{ java_debug_path }}"
+  register: java_debug_stat
+  tags: &tag_for_java_debug_tasks "java-debug"
+
+- name: "Delete {{ java_debug_path }} folder"
+  shell: "rm -r {{ java_debug_path }}"
+  when: java_debug_stat.stat.exists == True
+
+- name: Clone Ms java debug
+  shell: 'git clone https://github.com/microsoft/java-debug.git ~/.config/java-debug'
+  tags: *tag_for_java_debug_tasks
+  
+

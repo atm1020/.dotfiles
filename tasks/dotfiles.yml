@@ -1,0 +1,99 @@
+- name: Ensure user config directories exist
+  file:
+    owner: '{{ user }}'
+    group: '{{ user }}'
+    path: '{{ item }}'
+    state: directory
+  loop:
+    - '{{ config_path }}'
+    - '{{ user_home_path }}/workspace'
+    - '{{ config_path }}/i3'
+    - '{{ config_path }}/tmux'
+    - '{{ config_path }}/hypr'
+    - '{{ config_path }}/ghostty'
+  tags: &tags_for_dotfiles 'dotfiles'
+
+####### ZSH #######
+- name: Ensure .zshrc_local exists for private/local settings
+  file:
+    owner: '{{ user }}'
+    group: '{{ user }}'
+    path: '{{ zshrc_local_config_path }}'
+    state: touch
+    mode: '0644'
+  tags: *tags_for_dotfiles
+
+- name: Link .zshrc config
+  file:
+    owner: '{{ user }}'
+    group: '{{ user }}'
+    src: '{{ project_src_path }}/zsh/zshrc'
+    dest: '{{ user_home_path }}/.zshrc'
+    state: link
+    force: true
+  tags: *tags_for_dotfiles
+
+####### tmux #######
+- name: Link tmux config
+  file:
+    owner: '{{ user }}'
+    group: '{{ user }}'
+    src: '{{ project_src_path }}/tmux/tmux.conf'
+    dest: '{{ user_home_path }}/.tmux.conf'
+    state: link
+    force: true
+  tags: *tags_for_dotfiles
+
+####### i3 / Hyprland #######
+- name: Link i3 config
+  file:
+    owner: '{{ user }}'
+    group: '{{ user }}'
+    src: '{{ project_src_path }}/i3/config'
+    dest: '{{ config_path }}/i3/config'
+    state: link
+    force: true
+  tags: *tags_for_dotfiles
+
+- name: Link Hyprland config
+  file:
+    owner: '{{ user }}'
+    group: '{{ user }}'
+    src: '{{ project_src_path }}/hypr/hyprland.conf'
+    dest: '{{ config_path }}/hypr/hyprland.conf'
+    state: link
+    force: true
+  tags: *tags_for_dotfiles
+
+- name: Link Ghostty config
+  file:
+    owner: '{{ user }}'
+    group: '{{ user }}'
+    src: '{{ project_src_path }}/ghostty/config.ghostty'
+    dest: '{{ config_path }}/ghostty/config.ghostty'
+    state: link
+    force: true
+  tags: *tags_for_dotfiles
+
+###### ideavimrc ######
+- name: Link .ideavimrc
+  file:
+    owner: '{{ user }}'
+    group: '{{ user }}'
+    src: '{{ project_src_path }}/.ideavimrc'
+    dest: '{{ user_home_path }}/.ideavimrc'
+    state: link
+    force: true
+  tags: *tags_for_dotfiles
+
+###### go ######
+- name: Set Go environment variables in local zsh config
+  lineinfile:
+    path: '{{ zshrc_local_config_path }}'
+    insertafter: BOF
+    line: '{{ item }}'
+  loop:
+    - export PATH=$PATH:/usr/local/go/bin
+    - export GOPATH={{ user_home_path }}/go
+    - export PATH=$PATH:{{ user_home_path }}/go/bin
+  tags: *tags_for_dotfiles

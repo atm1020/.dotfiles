@@ -1,0 +1,124 @@
+" Find more examples here: https://jb.gg/share-ideavimrc
+set scrolloff=5
+set hlsearch
+set incsearch
+set relativenumber number
+set surround
+set NERDTree
+set clipboard+=unnamedplus
+
+" yiW select the whole connected line
+" yiw yank full word whatever your int the word
+nnoremap Y y$
+xnoremap p "_dP
+imap jk <Esc>
+" actions: https://gist.github.com/zchee/9c78f91cc5ad771c1f5d
+
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
+
+" TUILauncher
+nmap <C-Space>g <Action>(TUILauncher.lazygit)
+nmap <Space>tt <Action>(TUILauncher.ToggleFocus)
+nmap <Space>tj <Action>(TUILauncher.FocusTui)
+nmap <Space>tk <Action>(TUILauncher.FocusEditor)
+sethandler <C-Space> n:vim
+nmap <C-Space>e <Action>(TUILauncher.FocusTui)
+nmap <C-Space>n <Action>(TUILauncher.NextTuiTab)
+nmap <C-Space>p <Action>(TUILauncher.PreviousTuiTab)
+
+" resize
+nmap <C-Down> <Action>(StretchSplitToBottom)
+nmap <C-Up> <Action>(StretchSplitToTop)
+nmap <C-Left> <Action>(StretchSplitToLeft)
+nmap <C-Space><Space> <Action>(TUILauncher.ToggleToolWindow)
+nmap <C-Right> <Action>(StretchSplitToRight)
+
+" nerdtree
+noremap <Space>nn :NERDTree<CR>
+noremap <Space>tf :NERDTreeFind<CR>
+noremap <Space>e  :NERDTreeToggle<CR>
+
+" active windows"
+noremap <C-\> :action Terminal.SwitchFocusToEditor<CR>
+noremap <C-\> :action ActivateTerminalToolWindow<CR>
+
+noremap <Space>wd :action ActivateDebugToolWindow<CR>
+noremap <Space>wf :action ActivateFindToolWindow<CR>
+
+noremap <S-h> :action Back<CR>
+noremap <S-l> :action Forward<CR>
+
+" map <S-h> <Action>(Back)
+" map <S-l> <Action>(Forward)
+
+" run
+nnoremap <Space>rc :action RunConfiguration<CR>
+noremap <Space>rr :action Run<CR>
+noremap <Space>ri :action RunClass<CR>
+noremap <Space>dd :action Debug<CR>
+noremap <Space>di :action DebugClass<CR>
+noremap <Space>cc :action Coverage<CR>
+noremap <Space>cn :action RunCoverage<CR>
+noremap <Space>sp :action Stop<CR>
+
+" info
+"noremap <Space>tf :action SelectInProjectView<CR>
+"nnoremap <Space>ed :action ShowErrorDescription<CR>
+nnoremap <Space>pi :action ParameterInfo<CR>
+nnoremap <Space>jd :action QuickJavaDoc<CR>
+nnoremap <Space>fs :action FileStructurePopup<CR>
+nnoremap <Space>fu :action FindUsages<CR>
+nnoremap gr :action ShowUsages<CR>
+noremap <Space>ss  :action ShowSettings<CR>
+noremap <Space>ps :action ShowProjectStructureSettings<CR>
+
+" debug
+noremap <Space>tg :action ToggleMethodBreakpoint<CR>
+noremap <Space>b :action ToggleLineBreakpoint<CR>
+noremap <Space>be :action EditBreakpoint<CR>
+"noremap <Space>ee :action EvaluateExpression<CR>
+noremap <Space>ss :action StepOver<CR>
+noremap <Space>si :action StepInto<CR>
+noremap <Space>so :action StepOut<CR>
+noremap <Space>rs :action Resume<CR>
+noremap <Space>dw :action ActivateDebugToolWindow<CR>
+
+" new
+nnoremap st :action SearchEverywhere<Cr>
+nnoremap sf :action SearchEverywhere<Cr>
+
+nnoremap tf :action SelectInProjectView<Cr>
+nnoremap <Space>/ :action CommentByLineComment<CR>
+vnoremap <Space>/ :action CommentByLineComment<CR>
+
+" Harpoon
+nmap <A-u> <action>(HarpoonerOpenFile0)
+nmap <A-i> <action>(HarpoonerOpenFile1)
+nmap <A-o> <action>(HarpoonerOpenFile2)
+nmap <A-p> <action>(HarpoonerOpenFile3)
+
+nmap <Space>l <action>(HarpoonerOpenFile3)
+
+nmap <C-e> <action>(HarpoonerToggleQuickMenu)
+nmap <Space>a <action>(HarpoonerAddFile)
+
+nmap <Space>q <action>(com.github.atm1020.poc.toolWindow.TuiLauncherActionGroup1)
+nmap <Space>w <action>(com.github.atm1020.poc.toolWindow.TuiLauncherActionGroup2)
+
+nmap <Space>q <action>(TuiLauncherActionGroup.k9s)
+" Split window horizontally
+nmap <S-\> <Action>(SplitVertically)
+nmap <S--> <Action>(SplitHorizontally)
+nmap <C><Down> <Action>(StretchSplitToBottom)
+nmap <C>Left> <Action>(StretchSplitToLeft)
+nmap <C><Right> <Action>(StretchSplitToRight)
+nmap <C><Up> <Action>(StretchSplitToTop)
+nmap <C-f> <Action>(OpenProjectWindows)
+
+" Split window vertically
+nnoremap <S-> :vsplit<CR>
+inoremap <c-k> <Up>
+inoremap <c-j> <Down>

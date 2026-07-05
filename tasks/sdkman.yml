@@ -1,0 +1,21 @@
+- name: Install SDKMAN
+  shell: "curl -s https://get.sdkman.io | bash"
+  become: true
+  become_user: '{{ user }}'
+  tags: &tag_for_sdkman_tasks "sdkman" 
+
+- name: "Installing Java v{{ java_version }}"
+  shell:  "source {{ sdk_home_path  }}/bin/sdkman-init.sh && sdk install java {{ java_version }}"
+  become: true
+  become_user: '{{ user }}'
+  args:
+    executable: /bin/bash
+  tags: [ "maven", "java", *tag_for_sdkman_tasks ]
+
+- name: "Installing maven v{{ maven_version }}"
+  shell: "source {{ sdk_home_path }}/bin/sdkman-init.sh && sdk install maven {{ maven_version }}"
+  become: true
+  become_user: '{{ user }}'
+  args:
+    executable: /bin/bash
+  tags: ["sdkman" , "maven", *tag_for_sdkman_tasks ]

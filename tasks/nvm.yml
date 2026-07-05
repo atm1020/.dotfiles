@@ -1,0 +1,28 @@
+- name: "Create {{ nvm_home_path }} directory"
+  file:
+    owner: '{{ user }}'
+    group: '{{ user }}'
+    path: "{{ nvm_home_path }}"
+    state: directory
+  tags: &tag_for_vnm_task "nvm"
+
+- name: Install NVM
+  become: true
+  become_user: '{{ user }}'
+  shell: >
+    curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh" | bash
+  tags: *tag_for_vnm_task
+
+- name: Source NVM if installed
+  shell: "source {{ nvm_home_path }}/nvm.sh"
+  args:
+    executable: /bin/zsh
+  tags: *tag_for_vnm_task
+
+- name: "Installing node: {{ node_version }}"
+  shell: "source {{ nvm_home_path }}/nvm.sh && nvm install {{ node_version }}"
+  become: true
+  become_user: '{{ user }}'
+  args:
+    executable: /bin/bash
+  tags: ["node", *tag_for_vnm_task]

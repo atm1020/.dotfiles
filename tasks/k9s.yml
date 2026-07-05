@@ -1,0 +1,13 @@
+- name: Install K9S
+  command: "{{ item }}"
+  loop:
+    - snap install k9s
+  tags: 'k9s'
+
+# if this one is fixed, the k9s installation will be moved to the snap.yml file
+- name: Creating a symlink for k9s
+  file:
+    src: '/snap/k9s/current/bin/k9s'
+    dest: '/snap/bin/k9s'
+    state: link
+  tags: 'k9s'
