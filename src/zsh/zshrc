@@ -60,9 +60,13 @@ if [ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then . "$HOME/.nix-profile/
 # --- History search (omarchy-style) ---
 # fzf: Ctrl+R fuzzy history (deduped, newest first, Enter pastes to edit),
 #      Ctrl+T fuzzy file picker, Alt+C fuzzy cd, '**<Tab>' fuzzy completion
+# Integration scripts are vendored in this repo (src/zsh/fzf/), resolved
+# relative to this file's real location (works wherever the repo is cloned).
 if command -v fzf >/dev/null 2>&1; then
-  source /usr/share/doc/fzf/examples/key-bindings.zsh
-  source /usr/share/doc/fzf/examples/completion.zsh
+  _dotfiles_zsh_dir=${${(%):-%N}:A:h}
+  source "$_dotfiles_zsh_dir/fzf/key-bindings.zsh"
+  source "$_dotfiles_zsh_dir/fzf/completion.zsh"
+  unset _dotfiles_zsh_dir
 fi
 
 # Up/Down: prefix history search (type 'git' + Up cycles 'git ...' commands)
