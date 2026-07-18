@@ -56,3 +56,19 @@ if [ -e "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then . "$HOME/.nix-profile/
 
 # opencode
 [ -d "$HOME/.opencode/bin" ] && export PATH="$HOME/.opencode/bin:$PATH"
+
+# --- History search (omarchy-style) ---
+# fzf: Ctrl+R fuzzy history (deduped, newest first, Enter pastes to edit),
+#      Ctrl+T fuzzy file picker, Alt+C fuzzy cd, '**<Tab>' fuzzy completion
+if command -v fzf >/dev/null 2>&1; then
+  source /usr/share/doc/fzf/examples/key-bindings.zsh
+  source /usr/share/doc/fzf/examples/completion.zsh
+fi
+
+# Up/Down: prefix history search (type 'git' + Up cycles 'git ...' commands)
+for keymap in viins vicmd; do
+  bindkey -M $keymap '^[[A' history-beginning-search-backward
+  bindkey -M $keymap '^[OA' history-beginning-search-backward
+  bindkey -M $keymap '^[[B' history-beginning-search-forward
+  bindkey -M $keymap '^[OB' history-beginning-search-forward
+done
