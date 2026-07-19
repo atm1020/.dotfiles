@@ -25,6 +25,9 @@ alert='#[fg=#1f2329,bg=#e06c75,bold]'
 index=0
 
 while IFS='|' read -r session alerts; do
+  # Hidden popup sessions (e.g. spotify) stay out of the status bar.
+  [[ "$session" == "spotify" ]] && continue
+
   index=$((index + 1))
   key="$index"
   if [[ "$index" -eq 10 ]]; then

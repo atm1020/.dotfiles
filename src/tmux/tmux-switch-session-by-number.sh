@@ -8,7 +8,8 @@ if [[ -z "$slot" || ! "$slot" =~ ^[0-9]+$ ]]; then
   exit 0
 fi
 
-target=$(tmux list-sessions -F '#{session_name}' 2>/dev/null | sed -n "${slot}p")
+# Match status-bar numbering: skip hidden popup sessions (e.g. spotify).
+target=$(tmux list-sessions -F '#{session_name}' 2>/dev/null | grep -vx 'spotify' | sed -n "${slot}p")
 
 if [[ -z "$target" ]]; then
   tmux display-message "No tmux session at slot $slot"
